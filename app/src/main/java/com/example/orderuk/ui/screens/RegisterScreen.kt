@@ -34,13 +34,21 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.orderuk.R
+import com.example.orderuk.domain.RegisterViewModel
 import com.example.orderuk.ui.theme.OrderukTheme
 
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier) {
+fun RegisterScreen(modifier: Modifier = Modifier, registerViewModel: RegisterViewModel = viewModel(factory = RegisterViewModel.Factory)) {
     var showPassword by remember {
         mutableStateOf(false)
+    }
+    var email by remember {
+        mutableStateOf("")
+    }
+    var password by remember {
+        mutableStateOf("")
     }
     Column(
         modifier = modifier
@@ -61,16 +69,20 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
         }
         Spacer(modifier = modifier.height(20.dp))
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = email,
+            onValueChange = {
+                            email = it
+            },
             shape = RoundedCornerShape(8.dp),
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = modifier.height(10.dp))
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = password,
+            onValueChange = {
+                            password=it
+            },
             singleLine = true,
             visualTransformation = if (!showPassword) PasswordVisualTransformation() else VisualTransformation.None,
             shape = RoundedCornerShape(8.dp),
@@ -78,7 +90,9 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = modifier.height(20.dp))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                      registerViewModel.createAccount(email, password)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 13.dp)
