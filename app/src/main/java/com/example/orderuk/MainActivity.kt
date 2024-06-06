@@ -11,11 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.orderuk.ui.screens.RegisterScreen
+import com.example.orderuk.ui.navigation.AuthNav
 import com.example.orderuk.ui.theme.OrderukTheme
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 
 class MainActivity : ComponentActivity() {
 
@@ -26,7 +23,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             OrderukTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    RegisterScreen(modifier = Modifier.padding(innerPadding))
+                    AuthNav(modifier = Modifier.padding(innerPadding))
                 }
             }
         }

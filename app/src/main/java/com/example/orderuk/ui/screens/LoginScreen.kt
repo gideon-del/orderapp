@@ -1,7 +1,6 @@
 package com.example.orderuk.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -33,24 +31,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.orderuk.R
 import com.example.orderuk.domain.AuthViewModel
-import com.example.orderuk.ui.theme.OrderukTheme
 
 @Composable
-fun RegisterScreen(
+fun LoginScreen(
     modifier: Modifier = Modifier,
     registerViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory),
-    navigateToLogin:() -> Unit={}
+    navigsteToRegister:() -> Unit={}
 ) {
     var showPassword by remember {
         mutableStateOf(false)
     }
     val screenState by registerViewModel.uiState.collectAsState()
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -82,8 +77,11 @@ fun RegisterScreen(
                 Text("Email")
             }
         )
-        if(!screenState.emailResult.successful && !screenState.firstTime){
-            Text(text = screenState.emailResult.errorMessage, color = MaterialTheme.colorScheme.error)
+        if (!screenState.emailResult.successful && !screenState.firstTime) {
+            Text(
+                text = screenState.emailResult.errorMessage,
+                color = MaterialTheme.colorScheme.error
+            )
         }
         Spacer(modifier = modifier.height(10.dp))
         OutlinedTextField(
@@ -100,13 +98,16 @@ fun RegisterScreen(
                 Text("Password")
             }
         )
-        if(!screenState.passwordResult.successful && !screenState.firstTime){
-            Text(text = screenState.passwordResult.errorMessage, color = MaterialTheme.colorScheme.error)
+        if (!screenState.passwordResult.successful && !screenState.firstTime) {
+            Text(
+                text = screenState.passwordResult.errorMessage,
+                color = MaterialTheme.colorScheme.error
+            )
         }
         Spacer(modifier = modifier.height(10.dp))
         Button(
             onClick = {
-                registerViewModel.createAccount()
+                registerViewModel.signInAccount()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -117,12 +118,12 @@ fun RegisterScreen(
                 contentColor = Color.White
             ),
 
-        ) {
-            Text(text = "Create an account")
+            ) {
+            Text(text = stringResource(id = R.string.login))
         }
         Button(
             onClick = {
-                      navigateToLogin()
+                      navigsteToRegister()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -134,21 +135,7 @@ fun RegisterScreen(
             ),
 
             ) {
-            Text(text = "Login")
-        }
-    }
-}
-
-@Preview
-@Composable
-fun HomeScreenPreview() {
-    OrderukTheme {
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            RegisterScreen()
+            Text(text = stringResource(id = R.string.create_account))
         }
     }
 }
