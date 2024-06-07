@@ -3,4 +3,10 @@
     <string name="empty_email">The email must not be empty</string>
     <string name="create_account">Create an account</string>
     <string name="login">Login</string>
+    <string name="order_food">Order Restaurant food, takeaway and groceries.</string>
+    <string name="senses">Feast Your Senses, </string>
+    <string name="fast">Fast and Fresh</string>
+    <string name="postcode">Enter a postcode to see what we deliver</string>
+    <string name="ec34">e.g. EC4R 3TE</string>
+    <string name="next_page">Next Page</string>
 </resources>
