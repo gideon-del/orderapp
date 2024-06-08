@@ -21,6 +21,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -201,7 +207,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             }
 
         }
-        Spacer(modifier=Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Row(
             modifier = Modifier.horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(20.dp)
@@ -210,6 +216,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             RestaurantItem()
             RestaurantItem()
         }
+
+    DishCategory()
+
 
     }
 }
@@ -269,6 +278,34 @@ fun RestaurantItem(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.widthIn(max = 130.dp)
         )
+    }
+}
+
+@Composable
+fun DishCategory(modifier: Modifier = Modifier) {
+    Card(
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Box(modifier=Modifier.fillMaxWidth()) {
+            Image(
+                painter = painterResource(id = R.drawable.dish_item),
+                contentDescription = "Burgers & Fast food",
+                modifier=Modifier.fillMaxWidth()
+
+            )
+
+        }
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 10.dp, vertical = 5.dp)
+                .background(DarkBlue)
+        ) {
+            Text(
+                text = stringResource(id = R.string.burger),
+                style = MaterialTheme.typography.labelLarge,
+                color = Orange
+            )
+        }
     }
 }
 

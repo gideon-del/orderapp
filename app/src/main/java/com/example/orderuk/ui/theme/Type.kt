@@ -10,7 +10,8 @@ import com.example.orderuk.R
 
 val PoppinsFont = FontFamily(
     Font(R.font.poppins_regular, FontWeight.Normal),
-    Font(R.font.poppins_semibld, FontWeight.SemiBold)
+    Font(R.font.poppins_semibld, FontWeight.SemiBold),
+    Font(R.font.poppins_bold, FontWeight.Bold)
 )
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -39,6 +40,13 @@ val Typography = Typography(
         fontFamily = PoppinsFont,
         fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    labelLarge = TextStyle(
+        fontFamily = PoppinsFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     )
