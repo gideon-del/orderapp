@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -89,163 +90,180 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         modifier = modifier.verticalScroll(rememberScrollState()),
 
         ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(10.dp))
-                .background(DarkBlue)
-                .padding(horizontal = 20.dp, vertical = 40.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
 
-        ) {
 
-            Text(
-                text = stringResource(id = R.string.order_food),
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White,
-                textAlign = TextAlign.Center
-            )
             Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(DarkBlue)
+                    .padding(horizontal = 20.dp, vertical = 40.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+
             ) {
+
                 Text(
-                    text = stringResource(id = R.string.senses),
+                    text = stringResource(id = R.string.order_food),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.senses),
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.displayLarge
+                    )
+                    Text(
+                        text = stringResource(id = R.string.fast),
+                        color = Orange,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.displayLarge,
+
+                        )
+                }
+                Spacer(
+                    modifier = Modifier.height(
+                        20.dp
+                    )
+                )
+                Text(
+                    text = stringResource(id = R.string.postcode),
+                    style = MaterialTheme.typography.bodySmall,
                     color = Color.White,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.displayLarge
+                    modifier = Modifier.fillMaxWidth()
                 )
-                Text(
-                    text = stringResource(id = R.string.fast),
-                    color = Orange,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.displayLarge,
-
+                Spacer(
+                    modifier = Modifier.height(
+                        10.dp
                     )
-            }
-            Spacer(
-                modifier = Modifier.height(
-                    20.dp
                 )
-            )
-            Text(
-                text = stringResource(id = R.string.postcode),
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(
-                modifier = Modifier.height(
-                    10.dp
-                )
-            )
-            Row(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(100.dp)),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextField(
-                    value = "",
-                    onValueChange = {},
-                    shape = RoundedCornerShape(100),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        unfocusedPlaceholderColor = Color(0xFF000000),
-                        unfocusedIndicatorColor = Color.Transparent
-                    ),
-                    placeholder = {
-                        Text(
-                            text = stringResource(id = R.string.ec34),
-                            style = MaterialTheme.typography.bodySmall,
-                        )
-                    },
-                    modifier = Modifier.height(45.dp),
-                    textStyle = MaterialTheme.typography.bodySmall
-                )
-                Box(
+                Row(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .clip(
-                            RoundedCornerShape(
-                                100.dp
-                            )
-                        )
-                        .background(Orange)
+                        .clip(RoundedCornerShape(100.dp)),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    TextField(
+                        value = "",
+                        onValueChange = {},
+                        shape = RoundedCornerShape(100),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color.White,
+                            unfocusedPlaceholderColor = Color(0xFF000000),
+                            unfocusedIndicatorColor = Color.Transparent
+                        ),
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.ec34),
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        },
+                        modifier = Modifier.height(45.dp),
+                        textStyle = MaterialTheme.typography.bodySmall
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .clip(
+                                RoundedCornerShape(
+                                    100.dp
+                                )
+                            )
+                            .background(Orange)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.next_page),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .widthIn(min = 34.dp)
+                                .heightIn(min = 34.dp)
+                        )
+                    }
+                }
+
+            }
+            Spacer(modifier = Modifier.height(30.dp))
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.discount),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Black
+                )
+                Row(
+
+                    modifier = Modifier
+                        .widthIn(max = 180.dp)
+                        .border(width = 2.dp, color = DarkBlue, shape = RoundedCornerShape(1000.dp))
+                        .padding(vertical = 5.dp, horizontal = 10.dp),
+
+                    verticalAlignment = Alignment.CenterVertically,
+
+                    ) {
                     Image(
-                        painter = painterResource(id = R.drawable.next_page),
+                        painter = painterResource(id = R.drawable.drop_down),
                         contentDescription = null,
                         modifier = Modifier
-                            .widthIn(min = 34.dp)
-                            .heightIn(min = 34.dp)
+                            .widthIn(min = 30.dp)
+                            .height(30.dp)
                     )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = stringResource(id = R.string.pizza),
+                        style = TextStyle(
+                            fontSize = 10.sp,
+                            fontFamily = PoppinsFont,
+                            fontWeight = FontWeight.Normal,
+
+                            ),
+                        color = Color.Black
+                    )
+                }
+
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                RestaurantItem()
+                RestaurantItem()
+                RestaurantItem()
+            }
+            Spacer(modifier = Modifier.height(30.dp))
+            Column(
+                modifier = Modifier
+                    .background(Color(0x88D9D9D9))
+                    .padding(vertical = 10.dp, horizontal = 5.dp)
+            ) {
+                Text(text = stringResource(id = R.string.order_uk
+                ), style=MaterialTheme.typography.titleLarge)
+                Spacer(modifier = Modifier.height(10.dp))
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 150.dp),
+                    modifier = Modifier
+                        .nestedScroll(nestedScrollConnection)
+                        .heightIn(max = 800.dp),
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    items(items = listOf(1, 2, 3, 4)) {
+                        DishCategory()
+                    }
                 }
             }
 
         }
-        Spacer(modifier = Modifier.height(30.dp))
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(id = R.string.discount),
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Black
-            )
-            Row(
 
-                modifier = Modifier
-                    .widthIn(max = 180.dp)
-                    .border(width = 2.dp, color = DarkBlue, shape = RoundedCornerShape(1000.dp))
-                    .padding(vertical = 5.dp, horizontal = 10.dp),
-
-                verticalAlignment = Alignment.CenterVertically,
-
-                ) {
-                Image(
-                    painter = painterResource(id = R.drawable.drop_down),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .widthIn(min = 30.dp)
-                        .height(30.dp)
-                )
-                Spacer(modifier = Modifier.width(10.dp))
-                Text(
-                    text = stringResource(id = R.string.pizza),
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        fontFamily = PoppinsFont,
-                        fontWeight = FontWeight.Normal,
-
-                        ),
-                    color = Color.Black
-                )
-            }
-
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            RestaurantItem()
-            RestaurantItem()
-            RestaurantItem()
-        }
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 150.dp),
-            modifier = Modifier.nestedScroll(nestedScrollConnection).height(400.dp)
-        ) {
-            items(items = listOf(1, 2, 3, 4)) {
-                DishCategory()
-            }
-        }
-
-    }
 
 }
 
@@ -326,13 +344,20 @@ fun DishCategory(modifier: Modifier = Modifier) {
         }
         Column(
             modifier = Modifier
-                .padding(horizontal = 10.dp, vertical = 5.dp)
+                .fillMaxWidth()
                 .background(DarkBlue)
+                .padding(horizontal = 10.dp, vertical = 5.dp)
+
         ) {
             Text(
                 text = stringResource(id = R.string.burger),
                 style = MaterialTheme.typography.labelLarge,
                 color = Orange
+            )
+            Text(
+                text = stringResource(id = R.string.burger),
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White
             )
         }
     }
@@ -344,7 +369,6 @@ fun HomeScreenPreview(modifier: Modifier = Modifier) {
     OrderukTheme {
         HomeScreen(
             modifier = Modifier
-                .padding(10.dp)
                 .fillMaxSize()
         )
     }
