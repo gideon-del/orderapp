@@ -46,6 +46,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -55,6 +59,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.example.orderuk.R
 import com.example.orderuk.ui.theme.DarkBlue
 import com.example.orderuk.ui.theme.Orange
@@ -63,6 +68,21 @@ import com.example.orderuk.ui.theme.PoppinsFont
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
+    val nestedScrollConnection = object : NestedScrollConnection {
+        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+            println("Received onPreScroll callback.")
+            return Offset.Zero
+        }
+
+        override fun onPostScroll(
+            consumed: Offset,
+            available: Offset,
+            source: NestedScrollSource
+        ): Offset {
+            println("Received onPostScroll callback.")
+            return Offset.Zero
+        }
+    }
 
 
     Column(
@@ -216,11 +236,17 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             RestaurantItem()
             RestaurantItem()
         }
-
-    DishCategory()
-
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 150.dp),
+            modifier = Modifier.nestedScroll(nestedScrollConnection).height(400.dp)
+        ) {
+            items(items = listOf(1, 2, 3, 4)) {
+                DishCategory()
+            }
+        }
 
     }
+
 }
 
 @Composable
@@ -238,8 +264,9 @@ fun RestaurantItem(modifier: Modifier = Modifier) {
             Image(
                 painter = painterResource(id = R.drawable.restaurant),
                 contentDescription = null,
-                modifier = Modifier.size(150.dp)
-            )
+                modifier = Modifier.size(150.dp),
+
+                )
             Canvas(modifier = Modifier.size(150.dp), onDraw = {
                 drawRect(brush)
             })
@@ -268,6 +295,7 @@ fun RestaurantItem(modifier: Modifier = Modifier) {
                 }
 
             }
+
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(
@@ -286,11 +314,12 @@ fun DishCategory(modifier: Modifier = Modifier) {
     Card(
         shape = RoundedCornerShape(20.dp)
     ) {
-        Box(modifier=Modifier.fillMaxWidth()) {
+        Box(modifier = Modifier.fillMaxWidth()) {
             Image(
                 painter = painterResource(id = R.drawable.dish_item),
                 contentDescription = "Burgers & Fast food",
-                modifier=Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.Crop
 
             )
 
