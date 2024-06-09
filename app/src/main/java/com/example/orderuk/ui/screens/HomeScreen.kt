@@ -256,6 +256,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .nestedScroll(nestedScrollConnection)
                     .heightIn(max = 800.dp),
+                userScrollEnabled = false,
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
