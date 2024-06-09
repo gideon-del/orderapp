@@ -92,177 +92,188 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         ) {
 
 
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+                .background(DarkBlue)
+                .padding(horizontal = 20.dp, vertical = 40.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ) {
+
+            Text(
+                text = stringResource(id = R.string.order_food),
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(DarkBlue)
-                    .padding(horizontal = 20.dp, vertical = 40.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-
-            ) {
-
-                Text(
-                    text = stringResource(id = R.string.order_food),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.senses),
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.displayLarge
-                    )
-                    Text(
-                        text = stringResource(id = R.string.fast),
-                        color = Orange,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.displayLarge,
-
-                        )
-                }
-                Spacer(
-                    modifier = Modifier.height(
-                        20.dp
-                    )
-                )
-                Text(
-                    text = stringResource(id = R.string.postcode),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(
-                    modifier = Modifier.height(
-                        10.dp
-                    )
-                )
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(100.dp)),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextField(
-                        value = "",
-                        onValueChange = {},
-                        shape = RoundedCornerShape(100),
-                        colors = TextFieldDefaults.colors(
-                            unfocusedContainerColor = Color.White,
-                            unfocusedPlaceholderColor = Color(0xFF000000),
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.ec34),
-                                style = MaterialTheme.typography.bodySmall,
-                            )
-                        },
-                        modifier = Modifier.height(45.dp),
-                        textStyle = MaterialTheme.typography.bodySmall
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .clip(
-                                RoundedCornerShape(
-                                    100.dp
-                                )
-                            )
-                            .background(Orange)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.next_page),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .widthIn(min = 34.dp)
-                                .heightIn(min = 34.dp)
-                        )
-                    }
-                }
-
-            }
-            Spacer(modifier = Modifier.height(30.dp))
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(id = R.string.discount),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Black
+                    text = stringResource(id = R.string.senses),
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.displayLarge
                 )
-                Row(
+                Text(
+                    text = stringResource(id = R.string.fast),
+                    color = Orange,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.displayLarge,
 
+                    )
+            }
+            Spacer(
+                modifier = Modifier.height(
+                    20.dp
+                )
+            )
+            Text(
+                text = stringResource(id = R.string.postcode),
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(
+                modifier = Modifier.height(
+                    10.dp
+                )
+            )
+            Row(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(100.dp)),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextField(
+                    value = "",
+                    onValueChange = {},
+                    shape = RoundedCornerShape(100),
+                    colors = TextFieldDefaults.colors(
+                        unfocusedContainerColor = Color.White,
+                        unfocusedPlaceholderColor = Color(0xFF000000),
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.ec34),
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    },
+                    modifier = Modifier.height(45.dp),
+                    textStyle = MaterialTheme.typography.bodySmall
+                )
+                Box(
                     modifier = Modifier
-                        .widthIn(max = 180.dp)
-                        .border(width = 2.dp, color = DarkBlue, shape = RoundedCornerShape(1000.dp))
-                        .padding(vertical = 5.dp, horizontal = 10.dp),
-
-                    verticalAlignment = Alignment.CenterVertically,
-
-                    ) {
+                        .fillMaxHeight()
+                        .clip(
+                            RoundedCornerShape(
+                                100.dp
+                            )
+                        )
+                        .background(Orange)
+                ) {
                     Image(
-                        painter = painterResource(id = R.drawable.drop_down),
+                        painter = painterResource(id = R.drawable.next_page),
                         contentDescription = null,
                         modifier = Modifier
-                            .widthIn(min = 30.dp)
-                            .height(30.dp)
+                            .widthIn(min = 34.dp)
+                            .heightIn(min = 34.dp)
                     )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = stringResource(id = R.string.pizza),
-                        style = TextStyle(
-                            fontSize = 10.sp,
-                            fontFamily = PoppinsFont,
-                            fontWeight = FontWeight.Normal,
-
-                            ),
-                        color = Color.Black
-                    )
-                }
-
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            Row(
-                modifier = Modifier.horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                RestaurantItem()
-                RestaurantItem()
-                RestaurantItem()
-            }
-            Spacer(modifier = Modifier.height(30.dp))
-            Column(
-                modifier = Modifier
-                    .background(Color(0x88D9D9D9))
-                    .padding(vertical = 10.dp, horizontal = 5.dp)
-            ) {
-                Text(text = stringResource(id = R.string.order_uk
-                ), style=MaterialTheme.typography.titleLarge)
-                Spacer(modifier = Modifier.height(10.dp))
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 150.dp),
-                    modifier = Modifier
-                        .nestedScroll(nestedScrollConnection)
-                        .heightIn(max = 800.dp),
-                    horizontalArrangement = Arrangement.spacedBy(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    items(items = listOf(1, 2, 3, 4)) {
-                        DishCategory()
-                    }
                 }
             }
 
         }
+        Spacer(modifier = Modifier.height(30.dp))
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(id = R.string.discount),
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Black
+            )
+            Row(
+
+                modifier = Modifier
+                    .widthIn(max = 180.dp)
+                    .border(width = 2.dp, color = DarkBlue, shape = RoundedCornerShape(1000.dp))
+                    .padding(vertical = 5.dp, horizontal = 10.dp),
+
+                verticalAlignment = Alignment.CenterVertically,
+
+                ) {
+                Image(
+                    painter = painterResource(id = R.drawable.drop_down),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .widthIn(min = 30.dp)
+                        .height(30.dp)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(
+                    text = stringResource(id = R.string.pizza),
+                    style = TextStyle(
+                        fontSize = 10.sp,
+                        fontFamily = PoppinsFont,
+                        fontWeight = FontWeight.Normal,
+
+                        ),
+                    color = Color.Black
+                )
+            }
+
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+        Row(
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            RestaurantItem()
+            RestaurantItem()
+            RestaurantItem()
+        }
+        Spacer(modifier = Modifier.height(30.dp))
+        Column(
+            modifier = Modifier
+                .background(Color(0x88D9D9D9))
+                .padding(vertical = 10.dp, horizontal = 5.dp)
+        ) {
+            Text(
+                text = stringResource(
+                    id = R.string.order_uk
+                ), style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 150.dp),
+                modifier = Modifier
+                    .nestedScroll(nestedScrollConnection)
+                    .heightIn(max = 800.dp),
+                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                items(items = listOf(1, 2, 3, 4)) {
+                    DishCategory()
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(30.dp))
+        Text(text = "Popular Restaurants", style = MaterialTheme.typography.labelLarge)
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(modifier = Modifier.horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Restaurant()
+            Restaurant()
+            Restaurant()
+        }
+    }
 
 
 }
@@ -363,7 +374,38 @@ fun DishCategory(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true, widthDp = 400)
+@Composable
+fun Restaurant(modifier: Modifier = Modifier) {
+    Card(
+        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Box(modifier=Modifier.fillMaxWidth()) {
+            Image(
+                painter = painterResource(id = R.drawable.mcdonald),
+                contentDescription = null,
+                contentScale = ContentScale.FillBounds,
+                modifier=Modifier.size(150.dp)
+            )
+        }
+        Column(
+            modifier = Modifier
+                .background(Orange)
+                .fillMaxWidth()
+                .padding(7.dp)
+
+        ) {
+            Text(
+                text = "McDonald’s London",
+                style = MaterialTheme.typography.labelMedium,
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 400, heightDp = 2000)
 @Composable
 fun HomeScreenPreview(modifier: Modifier = Modifier) {
     OrderukTheme {
