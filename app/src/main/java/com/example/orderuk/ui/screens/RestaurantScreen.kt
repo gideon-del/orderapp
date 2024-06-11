@@ -1,5 +1,6 @@
 package com.example.orderuk.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,12 +20,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -88,6 +91,8 @@ fun RestaurantScreen(modifier: Modifier = Modifier) {
             }
         }
         DishItem()
+        Spacer(modifier = Modifier.height(10.dp))
+        DishItem()
     }
 }
 
@@ -100,7 +105,7 @@ fun DishItem(modifier: Modifier = Modifier) {
 
             ),
         elevation = CardDefaults.cardElevation(defaultElevation = 20.dp),
-
+        modifier=modifier
         ) {
         Column(
             modifier = Modifier
@@ -120,9 +125,7 @@ fun DishItem(modifier: Modifier = Modifier) {
 
                         )
                     Spacer(modifier = Modifier.height(10.dp))
-                    Row(
-
-                    ) {
+                    Row {
                         listOf(1, 2).forEach {
                             Image(
                                 painter = painterResource(id = R.drawable.hot_cihili),
@@ -152,13 +155,40 @@ fun DishItem(modifier: Modifier = Modifier) {
                 text = "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries , 3 cold drinks",
                 style = MaterialTheme.typography.bodyLarge
             )
+            Spacer(modifier = Modifier.height(10.dp))
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(170.dp),
-                modifier = Modifier.heightIn(max = 3000.dp)
-            ) {
-            items(items = listOf(1,2,3)){
+                columns = GridCells.Adaptive(190.dp),
+                modifier = Modifier.heightIn(max = 3000.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
 
-            }
+            ) {
+                items(items = listOf("Small", "Medium", "Large","XL Large with Sauces")) {
+                    OutlinedButton(
+                        onClick = { /*TODO*/ }, colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                        ),
+                        border= BorderStroke(width= 1.dp, color=Color(0xFF03081F)),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.Black,
+                            softWrap =false
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    color = Color(0xFF028643)
+                                )
+                                .padding(vertical = 2.dp, horizontal = 5.dp)
+                        ) {
+                            Text(text = "£21.90", softWrap =false)
+                        }
+                    }
+                }
             }
         }
 
