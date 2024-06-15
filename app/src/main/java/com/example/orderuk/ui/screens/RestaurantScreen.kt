@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -33,23 +34,42 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.orderuk.R
+import com.example.orderuk.domain.Dishes
+import com.example.orderuk.domain.RestaurantState
 import com.example.orderuk.domain.RestaurantViewModel
+import com.example.orderuk.ui.components.LoadingScreen
 import com.example.orderuk.ui.theme.DarkBlue
 import com.example.orderuk.ui.theme.OrderukTheme
 
 @Composable
 fun RestaurantScreen(modifier: Modifier = Modifier, restaurantViewModel: RestaurantViewModel = viewModel()) {
-    val dishes  by restaurantViewModel.uiState.collectAsStateWithLifecycle()
-    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+    val screenState  by restaurantViewModel.uiState.collectAsStateWithLifecycle()
+    when(screenState) {
+        is RestaurantState.Loading -> LoadingScreen()
+        is RestaurantState.Success -> SuccessScreen(dishes = (screenState as RestaurantState.Success).dishes)
+        is RestaurantState.Error -> {}
+    }
+}
+
+@Composable
+fun SuccessScreen(modifier: Modifier = Modifier, dishes: List<Dishes>) {
+    Column(modifier = modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .background(Color.White)) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -96,14 +116,17 @@ fun RestaurantScreen(modifier: Modifier = Modifier, restaurantViewModel: Restaur
                 }
             }
         }
-        DishItem()
-        Spacer(modifier = Modifier.height(10.dp))
-        DishItem()
+      Column (
+          verticalArrangement = Arrangement.spacedBy(10.dp)
+      ) {
+          dishes.forEach{dish->
+              DishItem(dish = dish)
+          }
+      }
     }
 }
-
 @Composable
-fun DishItem(modifier: Modifier = Modifier) {
+fun DishItem(modifier: Modifier = Modifier, dish: Dishes) {
     Card(
 
         colors = CardDefaults.cardColors(
@@ -125,40 +148,41 @@ fun DishItem(modifier: Modifier = Modifier) {
             ) {
                 Column {
                     Text(
-                        text = "Farm House Xtreme Pizza",
+                        text =dish.name,
                         modifier = Modifier.widthIn(max = 200.dp),
                         style = MaterialTheme.typography.displayMedium,
 
                         )
                     Spacer(modifier = Modifier.height(10.dp))
                     Row {
-                        listOf(1, 2).forEach {
+                        for( i in 1..dish.spiceLevel.toInt()) {
                             Image(
                                 painter = painterResource(id = R.drawable.hot_cihili),
                                 contentDescription = null,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
-                        listOf(1, 2, 3).forEach {
-                            Image(
-                                painter = painterResource(id = R.drawable.cold_chili),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
+                        if(dish.spiceLevel.toInt() != 5){
+                            for( i in (dish.spiceLevel.toInt() + 1)..5) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.cold_chili),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
                         }
+
                     }
                 }
-                Box {
-                    Image(
-                        painter = painterResource(id = R.drawable.pizza_dish),
-                        contentDescription = "Farm House Xtreme Pizza",
-                        modifier = Modifier.size(180.dp)
-                    )
+                Box(
+                    modifier = Modifier.clip(RoundedCornerShape(1000.dp))
+                ) {
+                   AsyncImage(model = dish.image, contentDescription = dish.name, modifier = Modifier.size(180.dp) )
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries , 3 cold drinks",
+                text = dish.description,
                 style = MaterialTheme.typography.bodyLarge
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -169,7 +193,7 @@ fun DishItem(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(10.dp)
 
             ) {
-                items(items = listOf("Small", "Medium", "Large","XL Large with Sauces")) {
+                items(items = dish.sizes.toList()) {dishSize->
                     OutlinedButton(
                         onClick = { /*TODO*/ }, colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
@@ -178,10 +202,11 @@ fun DishItem(modifier: Modifier = Modifier) {
                         shape = RoundedCornerShape(10.dp)
                     ) {
                         Text(
-                            text = it,
+                            text = dishSize.first.split("_").joinToString(" ").capitalize(locale = Locale("en-US")),
                             style = MaterialTheme.typography.labelMedium,
                             color = Color.Black,
-                            softWrap =false
+                            softWrap =true,
+
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Box(
@@ -191,7 +216,7 @@ fun DishItem(modifier: Modifier = Modifier) {
                                 )
                                 .padding(vertical = 2.dp, horizontal = 5.dp)
                         ) {
-                            Text(text = "£21.90", softWrap =false)
+                            Text(text = "£${dishSize.second.toDouble()}", softWrap =false)
                         }
                     }
                 }
