@@ -23,7 +23,7 @@ NavHost(navController = navController, startDestination = LoginRoute, modifier =
         composable<LoginRoute>{
                 LoginScreen(
                         navigsteToRegister = {
-                              navController.popBackStack(RegisterRoute, inclusive = true)
+                              navController.navigate(RegisterRoute)
                         }
                 )
         }

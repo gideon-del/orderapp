@@ -5,6 +5,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -70,8 +71,8 @@ import com.example.orderuk.ui.theme.OrderukTheme
 import com.example.orderuk.ui.theme.PoppinsFont
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
-    var outerScrollState = rememberScrollState()
+fun HomeScreen(modifier: Modifier = Modifier, navigateToRestaurant:() -> Unit) {
+    val outerScrollState = rememberScrollState()
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
@@ -82,12 +83,14 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     Offset(0f, outerScrollState.dispatchRawDelta(available.y))
                 }
             }
-            }
+        }
     }
 
 
     Column(
-        modifier = modifier.verticalScroll(outerScrollState),
+        modifier = modifier
+            .verticalScroll(outerScrollState)
+            .padding(horizontal = 10.dp, vertical = 16.dp),
 
         ) {
 
@@ -268,11 +271,13 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(30.dp))
         Text(text = "Popular Restaurants", style = MaterialTheme.typography.labelLarge)
         Spacer(modifier = Modifier.height(10.dp))
-        Row(modifier = Modifier.horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            Restaurant()
-            Restaurant()
-            Restaurant()
+        Row(
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Restaurant(navigateToRestaurant=navigateToRestaurant)
+            Restaurant(navigateToRestaurant=navigateToRestaurant)
+            Restaurant(navigateToRestaurant=navigateToRestaurant)
         }
     }
 
@@ -376,17 +381,19 @@ fun DishCategory(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Restaurant(modifier: Modifier = Modifier) {
+fun Restaurant(modifier: Modifier = Modifier, navigateToRestaurant:() -> Unit) {
     Card(
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Box(modifier=Modifier.fillMaxWidth()) {
+        Box(modifier = Modifier.fillMaxWidth().clickable {
+            navigateToRestaurant()
+        }) {
             Image(
                 painter = painterResource(id = R.drawable.mcdonald),
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
-                modifier=Modifier.size(150.dp)
+                modifier = Modifier.size(150.dp)
             )
         }
         Column(
@@ -412,7 +419,8 @@ fun HomeScreenPreview(modifier: Modifier = Modifier) {
     OrderukTheme {
         HomeScreen(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            navigateToRestaurant = {}
         )
     }
 }

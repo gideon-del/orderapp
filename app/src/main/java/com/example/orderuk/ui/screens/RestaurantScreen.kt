@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,13 +39,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.orderuk.R
+import com.example.orderuk.domain.RestaurantViewModel
 import com.example.orderuk.ui.theme.DarkBlue
 import com.example.orderuk.ui.theme.OrderukTheme
 
 @Composable
-fun RestaurantScreen(modifier: Modifier = Modifier) {
+fun RestaurantScreen(modifier: Modifier = Modifier, restaurantViewModel: RestaurantViewModel = viewModel()) {
+    val dishes  by restaurantViewModel.uiState.collectAsStateWithLifecycle()
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,

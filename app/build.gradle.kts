@@ -57,6 +57,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.0-alpha08")
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")

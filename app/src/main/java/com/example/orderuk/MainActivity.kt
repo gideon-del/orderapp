@@ -4,26 +4,50 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import com.google.firebase.Firebase
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.orderuk.domain.AuthViewModel
+import com.example.orderuk.ui.navigation.AppNav
 import com.example.orderuk.ui.navigation.AuthNav
 import com.example.orderuk.ui.theme.OrderukTheme
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.auth
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
+
         setContent {
             OrderukTheme {
+                var currentUser: FirebaseUser? by remember{
+                    mutableStateOf(null)
+                }
+                LaunchedEffect(Unit) {
+                    Firebase.auth.addAuthStateListener {auth->
+                        currentUser = auth.currentUser
+                    }
+                }
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AuthNav(modifier = Modifier.padding(innerPadding))
+                    if(currentUser === null){
+                        AuthNav(modifier = Modifier.padding(innerPadding))
+                    } else {
+                        AppNav(modifier=Modifier.padding(innerPadding))
+                    }
+
                 }
             }
         }
