@@ -7,16 +7,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.orderuk.AppContainer
 import com.example.orderuk.R
+import com.example.orderuk.data.CartContainer
 import com.example.orderuk.domain.use_cases.ValidateEmail
 import com.example.orderuk.domain.use_cases.ValidatePassword
-import com.example.orderuk.orderUkApplication
+
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthEmailException
 import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,10 +30,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class AuthViewModel(
-    private val auth: FirebaseAuth,
     private val emailValidator: ValidateEmail = ValidateEmail(),
     private val passwordValidator: ValidatePassword = ValidatePassword()
 ) : ViewModel() {
+    private val auth: FirebaseAuth = Firebase.auth
     private var _uiState = MutableStateFlow(RegisterState())
     val uiState = _uiState.asStateFlow()
     var currentUser = flow<FirebaseUser?> {
@@ -104,7 +105,7 @@ class AuthViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                AuthViewModel(orderUkApplication().container.auth)
+                AuthViewModel()
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.orderuk.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,29 +49,44 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.orderuk.R
+import com.example.orderuk.data.CartItem
+import com.example.orderuk.domain.CartEvents
 import com.example.orderuk.domain.Dishes
 import com.example.orderuk.domain.RestaurantState
 import com.example.orderuk.domain.RestaurantViewModel
 import com.example.orderuk.ui.components.LoadingScreen
 import com.example.orderuk.ui.theme.DarkBlue
 import com.example.orderuk.ui.theme.OrderukTheme
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 
 @Composable
-fun RestaurantScreen(modifier: Modifier = Modifier, restaurantViewModel: RestaurantViewModel = viewModel()) {
-    val screenState  by restaurantViewModel.uiState.collectAsStateWithLifecycle()
-    when(screenState) {
+fun RestaurantScreen(
+    modifier: Modifier = Modifier,
+    restaurantViewModel: RestaurantViewModel = viewModel(),
+    cartUiEvent: (CartEvents) -> Unit
+) {
+    val screenState by restaurantViewModel.uiState.collectAsStateWithLifecycle()
+
+    when (screenState) {
         is RestaurantState.Loading -> LoadingScreen()
-        is RestaurantState.Success -> SuccessScreen(dishes = (screenState as RestaurantState.Success).dishes)
+        is RestaurantState.Success -> SuccessScreen(dishes = (screenState as RestaurantState.Success).dishes, cartUiEvent = cartUiEvent)
         is RestaurantState.Error -> {}
     }
 }
 
 @Composable
-fun SuccessScreen(modifier: Modifier = Modifier, dishes: List<Dishes>) {
-    Column(modifier = modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState())
-        .background(Color.White)) {
+fun SuccessScreen(
+    modifier: Modifier = Modifier,
+    dishes: List<Dishes>,
+    cartUiEvent: (CartEvents) -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .background(Color.White)
+    ) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -116,17 +133,18 @@ fun SuccessScreen(modifier: Modifier = Modifier, dishes: List<Dishes>) {
                 }
             }
         }
-      Column (
-          verticalArrangement = Arrangement.spacedBy(10.dp)
-      ) {
-          dishes.forEach{dish->
-              DishItem(dish = dish)
-          }
-      }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            dishes.forEach { dish ->
+                DishItem(dish = dish, cartUiEvent = cartUiEvent)
+            }
+        }
     }
 }
+
 @Composable
-fun DishItem(modifier: Modifier = Modifier, dish: Dishes) {
+fun DishItem(modifier: Modifier = Modifier, dish: Dishes, cartUiEvent: (CartEvents) -> Unit) {
     Card(
 
         colors = CardDefaults.cardColors(
@@ -134,8 +152,8 @@ fun DishItem(modifier: Modifier = Modifier, dish: Dishes) {
 
             ),
         elevation = CardDefaults.cardElevation(defaultElevation = 20.dp),
-        modifier=modifier
-        ) {
+        modifier = modifier
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -148,22 +166,22 @@ fun DishItem(modifier: Modifier = Modifier, dish: Dishes) {
             ) {
                 Column {
                     Text(
-                        text =dish.name,
+                        text = dish.name,
                         modifier = Modifier.widthIn(max = 200.dp),
                         style = MaterialTheme.typography.displayMedium,
 
                         )
                     Spacer(modifier = Modifier.height(10.dp))
                     Row {
-                        for( i in 1..dish.spiceLevel.toInt()) {
+                        for (i in 1..dish.spiceLevel.toInt()) {
                             Image(
                                 painter = painterResource(id = R.drawable.hot_cihili),
                                 contentDescription = null,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
-                        if(dish.spiceLevel.toInt() != 5){
-                            for( i in (dish.spiceLevel.toInt() + 1)..5) {
+                        if (dish.spiceLevel.toInt() != 5) {
+                            for (i in (dish.spiceLevel.toInt() + 1)..5) {
                                 Image(
                                     painter = painterResource(id = R.drawable.cold_chili),
                                     contentDescription = null,
@@ -177,7 +195,11 @@ fun DishItem(modifier: Modifier = Modifier, dish: Dishes) {
                 Box(
                     modifier = Modifier.clip(RoundedCornerShape(1000.dp))
                 ) {
-                   AsyncImage(model = dish.image, contentDescription = dish.name, modifier = Modifier.size(180.dp) )
+                    AsyncImage(
+                        model = dish.image,
+                        contentDescription = dish.name,
+                        modifier = Modifier.size(180.dp)
+                    )
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -193,21 +215,27 @@ fun DishItem(modifier: Modifier = Modifier, dish: Dishes) {
                 verticalArrangement = Arrangement.spacedBy(10.dp)
 
             ) {
-                items(items = dish.sizes.toList()) {dishSize->
+                items(items = dish.sizes.toList()) { dishSize ->
                     OutlinedButton(
-                        onClick = { /*TODO*/ }, colors = ButtonDefaults.buttonColors(
+                        onClick = {
+                                  cartUiEvent(CartEvents.AddToCart(
+                                      price = dishSize.second.toInt(),
+                                      productName = dish.name
+                                  ))
+                        }, colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
                         ),
-                        border= BorderStroke(width= 1.dp, color=Color(0xFF03081F)),
+                        border = BorderStroke(width = 1.dp, color = Color(0xFF03081F)),
                         shape = RoundedCornerShape(10.dp)
                     ) {
                         Text(
-                            text = dishSize.first.split("_").joinToString(" ").capitalize(locale = Locale("en-US")),
+                            text = dishSize.first.split("_").joinToString(" ")
+                                .capitalize(locale = Locale("en-US")),
                             style = MaterialTheme.typography.labelMedium,
                             color = Color.Black,
-                            softWrap =true,
+                            softWrap = true,
 
-                        )
+                            )
                         Spacer(modifier = Modifier.width(10.dp))
                         Box(
                             modifier = Modifier
@@ -216,7 +244,7 @@ fun DishItem(modifier: Modifier = Modifier, dish: Dishes) {
                                 )
                                 .padding(vertical = 2.dp, horizontal = 5.dp)
                         ) {
-                            Text(text = "£${dishSize.second.toDouble()}", softWrap =false)
+                            Text(text = "£${dishSize.second.toDouble()}", softWrap = false)
                         }
                     }
                 }
@@ -233,7 +261,8 @@ fun RestaurantScreenPreview(modifier: Modifier = Modifier) {
         RestaurantScreen(
             modifier = Modifier
                 .fillMaxWidth()
-                .safeContentPadding()
+                .safeContentPadding(),
+            cartUiEvent = {}
         )
     }
 }
