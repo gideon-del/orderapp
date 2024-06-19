@@ -34,6 +34,7 @@ class RestaurantViewModel: ViewModel() {
             if(updatedProduct != null){
               val updatedList = updatedProduct.map {snapshot ->
                   val product = snapshot.getData()
+
                   transformProductDoc(product)
               }
                 trySend(RestaurantState.Success(updatedList)).isSuccess
@@ -55,7 +56,8 @@ private  fun transformProductDoc(product: Map<String, Any>): Dishes{
         description = product["description"].toString(),
         sizes = product["sizes"] as Map<String, Number>,
         spiceLevel = product["spice_level"] as Number,
-        image = product["image"].toString()
+        image = product["image"].toString(),
+        id = product["id"].toString()
     )
 }
 

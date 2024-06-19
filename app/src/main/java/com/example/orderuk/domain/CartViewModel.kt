@@ -1,5 +1,6 @@
 package com.example.orderuk.domain
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -20,18 +21,17 @@ class CartViewModel(private val cartRepo: CartContainer): ViewModel() {
 
 fun onUIEvent(event: CartEvents){
     when(event) {
-        is CartEvents.AddToCart -> addCartItem(productName = event.productName, price = event.price)
+        is CartEvents.AddToCart -> addCartItem(event.cartItem)
         is CartEvents.DeleteCartItem -> deleteCartItem(event.cartItem)
+        is CartEvents.UpdateCartItem -> updateCartItem(event.cartItem)
     }
 }
-  private fun addCartItem(productName: String, price: Int){
+  private fun addCartItem(cartItem: CartItem){
        viewModelScope.launch {
 
-           cartRepo.insertCartItem(CartItem(
-               productName = productName,
-               price = price,
-               quantity = 1
-           ))
+
+          val isAdded = cartRepo.insertCartItem(cartItem)
+           Log.d("Product", isAdded.toString())
 
        }
    }
@@ -40,6 +40,11 @@ fun onUIEvent(event: CartEvents){
     private fun deleteCartItem(cartItem: CartItem) {
         viewModelScope.launch {
             cartRepo.deleteCartItem(cartItem)
+        }
+    }
+    private fun updateCartItem  (cartItem: CartItem) {
+        viewModelScope.launch {
+            cartRepo.updateCartItem(cartItem)
         }
     }
     companion object{

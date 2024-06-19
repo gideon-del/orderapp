@@ -15,4 +15,6 @@
     <string name="burger">Burgers &amp; Fast food</string>
     <string name="menu">Menu</string>
     <string name="register_error">Invalid email or password</string>
+    <string name="empty_cart">Your cart is empty</string>
+    <string name="place_order">Place order</string>
 </resources>

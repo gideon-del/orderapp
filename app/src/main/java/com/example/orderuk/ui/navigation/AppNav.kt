@@ -7,20 +7,30 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +58,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.orderuk.R
 import com.example.orderuk.data.CartItem
 import com.example.orderuk.domain.CartEvents
@@ -106,9 +118,7 @@ fun AppNav(
         if (showCart) {
             CartDetail(cartItems = cartState, closeCart = {
                 showCart = false
-            }, deleteCart = { cartItem ->
-                cartViewModel.onUIEvent(CartEvents.DeleteCartItem(cartItem))
-            })
+            }, cartUiEvent = cartViewModel::onUIEvent)
         }
 
     }
@@ -163,7 +173,7 @@ fun CartDetail(
     modifier: Modifier = Modifier,
     cartItems: List<CartItem>,
     closeCart: () -> Unit,
-    deleteCart: (CartItem) -> Unit
+    cartUiEvent: (CartEvents) -> Unit
 ) {
 
     Box(modifier = modifier) {
@@ -177,60 +187,152 @@ fun CartDetail(
         )
         Column(
             modifier = Modifier
-                .fillMaxSize(0.8f)
+                .fillMaxSize(0.9f)
                 .background(Color.White)
                 .clip(RoundedCornerShape(20.dp))
                 .align(Alignment.Center)
-                .padding(horizontal = 10.dp, vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(horizontal = 10.dp, vertical = 8.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            cartItems.forEach { cartItem ->
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+            if (cartItems.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        ,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
+                    Icon(
+                        imageVector = Icons.Filled.ShoppingCart,
+                        contentDescription = null,
+                        modifier = Modifier.size(100.dp),
+                        tint = Color.Black
+                    )
+                    Text(text = stringResource(id = R.string.empty_cart), color = Color.Black)
+                }
+            } else {
+                val total: Int = cartItems.fold(0) { acc, cartItem ->
+                    acc + (cartItem.price * cartItem.quantity)
+                }
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    cartItems.forEach { cartItem ->
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .clip(RoundedCornerShape(100))
+                                ) {
+                                    AsyncImage(
+                                        model = cartItem.imageUrl,
+                                        contentDescription = cartItem.productName,
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
 
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(100))
-                            .size(30.dp)
-                            .background(Orange),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = cartItem.quantity.toString(),
-                            textAlign = TextAlign.Center,
-                            color = Color.White,
-                            fontFamily = PoppinsFont,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    Column {
-                        Text(
-                            text = "£${cartItem.price}",
-                            fontFamily = PoppinsFont,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFF028643),
-                            fontSize = 20.sp,
-                        )
-                        Text(
-                            text = cartItem.productName,
-                            fontFamily = PoppinsFont,
-                            fontWeight = FontWeight.SemiBold,
-                            color = DarkBlue,
-                            fontSize = 20.sp,
-                        )
-                    }
-                    IconButton(onClick = {
-                        deleteCart(cartItem)
-                    }) {
-                        Icon(imageVector = Icons.Filled.Delete, contentDescription = "Delete")
-                    }
+                                Text(
+                                    text = cartItem.productName,
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = DarkBlue
+                                )
+                            }
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                FilledIconButton(
+                                    onClick = {
+                                        cartUiEvent(CartEvents.UpdateCartItem(
+                                            cartItem.copy(
+                                                quantity = if( cartItem.quantity <= 1) 1 else cartItem.quantity-1
+                                            )
+                                        ))
+                                    },
+                                    modifier = Modifier.wrapContentSize(),
+                                    colors = IconButtonDefaults.filledIconButtonColors(
+                                        containerColor = Color.Transparent,
+                                        contentColor = DarkBlue
+                                    )
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.minus),
+                                        contentDescription = "Decrease"
+                                    )
+                                }
+                                Box(
+                                    modifier = Modifier
+
+                                        .background(Color.White),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = cartItem.quantity.toString(),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = DarkBlue
+                                    )
+                                }
+                                FilledIconButton(
+                                    onClick = {cartUiEvent(CartEvents.UpdateCartItem(
+                                        cartItem.copy(
+                                            quantity = cartItem.quantity+1
+                                        )
+                                    )) },
+                                    modifier = Modifier.wrapContentSize(),
+                                    colors = IconButtonDefaults.filledIconButtonColors(
+                                        containerColor = Color.Transparent,
+                                        contentColor = DarkBlue
+                                    )
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.add),
+                                        contentDescription = "Increase",
+
+                                        )
+                                }
+                            }
+
+                            IconButton(onClick = {
+                                cartUiEvent(CartEvents.DeleteCartItem(cartItem))
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "Delete",
+                                    tint = DarkBlue
+                                )
+                            }
 
 
+                        }
+                    }
+                }
+
+                Button(
+                    onClick = { /*TODO*/ }, colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Green,
+                        contentColor = Color.White
+                    ), shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text(
+                        text = "£$total",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(text = stringResource(id = R.string.place_order))
                 }
             }
+
         }
     }
 }
@@ -242,14 +344,10 @@ fun AppNavPreview(modifier: Modifier = Modifier) {
     OrderukTheme {
         CartDetail(
             cartItems = listOf(
-                CartItem(
-                    quantity = 1,
-                    price = 21,
-                    productName = "Pepperoni Pizza"
-                )
+
             ),
             closeCart = {},
-            deleteCart = {}
+            cartUiEvent = {}
         )
     }
 }

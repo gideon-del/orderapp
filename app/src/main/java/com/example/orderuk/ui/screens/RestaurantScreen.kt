@@ -1,6 +1,5 @@
 package com.example.orderuk.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,7 +31,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,8 +55,6 @@ import com.example.orderuk.domain.RestaurantViewModel
 import com.example.orderuk.ui.components.LoadingScreen
 import com.example.orderuk.ui.theme.DarkBlue
 import com.example.orderuk.ui.theme.OrderukTheme
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
 
 @Composable
 fun RestaurantScreen(
@@ -70,7 +66,12 @@ fun RestaurantScreen(
 
     when (screenState) {
         is RestaurantState.Loading -> LoadingScreen()
-        is RestaurantState.Success -> SuccessScreen(dishes = (screenState as RestaurantState.Success).dishes, cartUiEvent = cartUiEvent)
+        is RestaurantState.Success -> SuccessScreen(
+            dishes = (screenState as RestaurantState.Success).dishes,
+            cartUiEvent = cartUiEvent,
+            modifier = modifier
+        )
+
         is RestaurantState.Error -> {}
     }
 }
@@ -162,15 +163,16 @@ fun DishItem(modifier: Modifier = Modifier, dish: Dishes, cartUiEvent: (CartEven
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Column {
                     Text(
                         text = dish.name,
                         modifier = Modifier.widthIn(max = 200.dp),
                         style = MaterialTheme.typography.displayMedium,
-
-                        )
+                        color = Color.Black
+                    )
                     Spacer(modifier = Modifier.height(10.dp))
                     Row {
                         for (i in 1..dish.spiceLevel.toInt()) {
@@ -193,19 +195,23 @@ fun DishItem(modifier: Modifier = Modifier, dish: Dishes, cartUiEvent: (CartEven
                     }
                 }
                 Box(
-                    modifier = Modifier.clip(RoundedCornerShape(1000.dp))
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(100))
                 ) {
                     AsyncImage(
                         model = dish.image,
                         contentDescription = dish.name,
-                        modifier = Modifier.size(180.dp)
+                        modifier = Modifier.size(180.dp),
+                        contentScale = ContentScale.Crop
                     )
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = dish.description,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black
             )
             Spacer(modifier = Modifier.height(10.dp))
             LazyVerticalGrid(
@@ -218,10 +224,17 @@ fun DishItem(modifier: Modifier = Modifier, dish: Dishes, cartUiEvent: (CartEven
                 items(items = dish.sizes.toList()) { dishSize ->
                     OutlinedButton(
                         onClick = {
-                                  cartUiEvent(CartEvents.AddToCart(
-                                      price = dishSize.second.toInt(),
-                                      productName = dish.name
-                                  ))
+                            cartUiEvent(
+                                CartEvents.AddToCart(
+                                    cartItem = CartItem(
+                                        productName = dish.name,
+                                        price = dishSize.second.toInt(),
+                                        quantity = 1,
+                                        productId = dish.id,
+                                        imageUrl = dish.image ?: ""
+                                    )
+                                )
+                            )
                         }, colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
                         ),

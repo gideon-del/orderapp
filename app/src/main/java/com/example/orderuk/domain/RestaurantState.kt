@@ -12,5 +12,6 @@ data class Dishes(
     val description: String,
     val spiceLevel: Number,
     val image: String?,
-    val sizes: Map<String, Number>
+    val sizes: Map<String, Number>,
+    val id: String
 )
