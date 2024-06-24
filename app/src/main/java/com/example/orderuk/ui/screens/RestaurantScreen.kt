@@ -1,5 +1,6 @@
 package com.example.orderuk.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.capitalize
@@ -49,6 +51,7 @@ import coil.compose.AsyncImage
 import com.example.orderuk.R
 import com.example.orderuk.data.CartItem
 import com.example.orderuk.domain.CartEvents
+import com.example.orderuk.domain.CartViewModel
 import com.example.orderuk.domain.Dishes
 import com.example.orderuk.domain.RestaurantState
 import com.example.orderuk.domain.RestaurantViewModel
@@ -60,7 +63,7 @@ import com.example.orderuk.ui.theme.OrderukTheme
 fun RestaurantScreen(
     modifier: Modifier = Modifier,
     restaurantViewModel: RestaurantViewModel = viewModel(),
-    cartUiEvent: (CartEvents) -> Unit
+    cartUiEvent: (CartEvents) -> Unit,
 ) {
     val screenState by restaurantViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -69,7 +72,8 @@ fun RestaurantScreen(
         is RestaurantState.Success -> SuccessScreen(
             dishes = (screenState as RestaurantState.Success).dishes,
             cartUiEvent = cartUiEvent,
-            modifier = modifier
+            modifier = modifier,
+
         )
 
         is RestaurantState.Error -> {}
@@ -80,8 +84,11 @@ fun RestaurantScreen(
 fun SuccessScreen(
     modifier: Modifier = Modifier,
     dishes: List<Dishes>,
-    cartUiEvent: (CartEvents) -> Unit
+    cartUiEvent: (CartEvents) -> Unit,
+
 ) {
+    val cartViewModel: CartViewModel = viewModel(factory = CartViewModel.Factory)
+    val cart by cartViewModel.uiState.collectAsStateWithLifecycle(listOf())
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -138,14 +145,30 @@ fun SuccessScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             dishes.forEach { dish ->
-                DishItem(dish = dish, cartUiEvent = cartUiEvent)
+                DishItem(dish = dish, cartUiEvent = cartUiEvent, cartUiState = cart)
             }
         }
     }
 }
 
 @Composable
-fun DishItem(modifier: Modifier = Modifier, dish: Dishes, cartUiEvent: (CartEvents) -> Unit) {
+fun DishItem(modifier: Modifier = Modifier, dish: Dishes, cartUiState: List<CartItem> ,cartUiEvent: (CartEvents) -> Unit) {
+    val context = LocalContext.current
+    val addCartItem :(CartItem) -> Unit = {cartItem ->
+       val addedItem = cartUiState.filter { item ->
+                cartItem.productName.contains(item.productName)  && cartItem.size.contains(item.size)
+
+                 }
+
+        if (addedItem.isEmpty()){
+            cartUiEvent(
+                CartEvents.AddToCart(
+                    cartItem)
+            )
+        } else{
+            Toast.makeText(context,"Item already exists", Toast.LENGTH_LONG).show()
+        }
+    }
     Card(
 
         colors = CardDefaults.cardColors(
@@ -224,17 +247,14 @@ fun DishItem(modifier: Modifier = Modifier, dish: Dishes, cartUiEvent: (CartEven
                 items(items = dish.sizes.toList()) { dishSize ->
                     OutlinedButton(
                         onClick = {
-                            cartUiEvent(
-                                CartEvents.AddToCart(
-                                    cartItem = CartItem(
-                                        productName = dish.name,
-                                        price = dishSize.second.toInt(),
-                                        quantity = 1,
-                                        productId = dish.id,
-                                        imageUrl = dish.image ?: ""
-                                    )
-                                )
-                            )
+                           addCartItem(CartItem(
+                               productName = dish.name,
+                               price = dishSize.second.toInt(),
+                               quantity = 1,
+                               productId = dish.id,
+                               imageUrl = dish.image ?: "",
+                               size = dishSize.first
+                           ))
                         }, colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
                         ),
@@ -275,7 +295,7 @@ fun RestaurantScreenPreview(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .safeContentPadding(),
-            cartUiEvent = {}
+            cartUiEvent = {},
         )
     }
 }

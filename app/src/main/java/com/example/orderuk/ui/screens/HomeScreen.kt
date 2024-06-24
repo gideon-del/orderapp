@@ -1,6 +1,6 @@
 package com.example.orderuk.ui.screens
 
-import android.graphics.Canvas
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,29 +19,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -61,9 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.example.orderuk.R
 import com.example.orderuk.ui.theme.DarkBlue
 import com.example.orderuk.ui.theme.Orange
@@ -293,7 +282,7 @@ fun RestaurantItem(modifier: Modifier = Modifier) {
         start = Offset(150f, 10f),
         end = Offset(0f, 150f)
     )
-    Column {
+    Column(modifier) {
         Box(modifier = Modifier.clip(RoundedCornerShape(15.dp))) {
 
             Image(
@@ -347,7 +336,8 @@ fun RestaurantItem(modifier: Modifier = Modifier) {
 @Composable
 fun DishCategory(modifier: Modifier = Modifier) {
     Card(
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(20.dp),
+        modifier = modifier
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             Image(
@@ -384,18 +374,19 @@ fun DishCategory(modifier: Modifier = Modifier) {
 fun Restaurant(modifier: Modifier = Modifier, navigateToRestaurant:() -> Unit) {
     Card(
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Box(modifier = Modifier.fillMaxWidth().clickable {
+        modifier = modifier.fillMaxWidth().clickable {
             navigateToRestaurant()
-        }) {
+        },
+
+    ) {
+       
             Image(
                 painter = painterResource(id = R.drawable.mcdonald),
                 contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.size(150.dp)
+                contentScale = ContentScale.Crop,
+
             )
-        }
+
         Column(
             modifier = Modifier
                 .background(Orange)

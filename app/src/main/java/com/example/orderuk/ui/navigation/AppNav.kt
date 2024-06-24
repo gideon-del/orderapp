@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -34,7 +33,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,11 +45,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -66,10 +61,10 @@ import com.example.orderuk.domain.CartViewModel
 import com.example.orderuk.ui.screens.HomeScreen
 import com.example.orderuk.ui.screens.RestaurantScreen
 import com.example.orderuk.ui.theme.DarkBlue
-import com.example.orderuk.ui.theme.Orange
 import com.example.orderuk.ui.theme.OrderukTheme
-import com.example.orderuk.ui.theme.PoppinsFont
+
 import kotlinx.serialization.Serializable
+
 
 sealed class Routes {
     @Serializable
@@ -173,7 +168,7 @@ fun CartDetail(
     modifier: Modifier = Modifier,
     cartItems: List<CartItem>,
     closeCart: () -> Unit,
-    cartUiEvent: (CartEvents) -> Unit
+    cartUiEvent: (CartEvents) ->  Unit
 ) {
 
     Box(modifier = modifier) {
