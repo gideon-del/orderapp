@@ -10,6 +10,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -379,28 +380,23 @@ fun Restaurant(modifier: Modifier = Modifier, navigateToRestaurant:() -> Unit) {
         },
 
     ) {
-       
-            Image(
-                painter = painterResource(id = R.drawable.mcdonald),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
 
-            )
 
-        Column(
-            modifier = Modifier
-                .background(Orange)
-                .fillMaxWidth()
-                .padding(7.dp)
+    Column(
+        modifier = Modifier
+            .background(Orange)
+            .fillMaxWidth()
+            .padding(7.dp)
 
-        ) {
-            Text(
-                text = "McDonald’s London",
-                style = MaterialTheme.typography.labelMedium,
-                textAlign = TextAlign.Center,
-                color = Color.White
-            )
-        }
+    ) {
+        Text(
+            text = "McDonald’s London",
+            style = MaterialTheme.typography.labelMedium,
+            textAlign = TextAlign.Center,
+            color = Color.White
+        )
+
+}
     }
 }
 
