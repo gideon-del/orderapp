@@ -36,6 +36,13 @@ val Typography = Typography(
         lineHeight = 28.sp,
         letterSpacing = 0.5.sp
     ),
+    displaySmall =TextStyle(
+        fontFamily = PoppinsFont,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.5.sp
+    ) ,
     bodySmall = TextStyle(
         fontFamily = PoppinsFont,
         fontWeight = FontWeight.Normal,
@@ -61,6 +68,13 @@ val Typography = Typography(
         fontFamily = PoppinsFont,
         fontWeight = FontWeight.Bold,
         fontSize = 13.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = PoppinsFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 15.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     )

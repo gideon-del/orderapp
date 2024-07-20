@@ -57,7 +57,7 @@ android {
 dependencies {
     val lifecycle_version = "2.8.1"
     val room_version = "2.6.1"
-
+    implementation("androidx.core:core-splashscreen:1.0.0")
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version")

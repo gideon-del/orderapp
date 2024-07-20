@@ -17,6 +17,7 @@ class CartContainer(private val cartDAO: CartDAO, val auth: FirebaseAuth = Fireb
     suspend fun updateCartItem(cartItem: CartItem) = cartDAO.upDateCartItem(cartItem)
 
     suspend fun deleteCartItem(cartItem: CartItem)  = cartDAO.deleteCartItem(cartItem)
+    suspend fun clearCart() = cartDAO.clearCart()
 }
 
 class DefaultContainer(private val cartDAO: CartDAO): AppContainer{

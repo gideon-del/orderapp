@@ -21,7 +21,8 @@ class RestaurantViewModel: ViewModel() {
     val newList = products.map {snapshot->
 
     val product = snapshot.getData()
-    transformProductDoc(product)
+
+    transformProductDoc(product,snapshot.id)
 
 }
         trySend(RestaurantState.Success(newList)).isSuccess
@@ -35,7 +36,7 @@ class RestaurantViewModel: ViewModel() {
               val updatedList = updatedProduct.map {snapshot ->
                   val product = snapshot.getData()
 
-                  transformProductDoc(product)
+                  transformProductDoc(product,snapshot.id)
               }
                 trySend(RestaurantState.Success(updatedList)).isSuccess
 
@@ -49,7 +50,7 @@ class RestaurantViewModel: ViewModel() {
        initialValue = RestaurantState.Loading,
        started = SharingStarted.WhileSubscribed(5_000L)
    )
-private  fun transformProductDoc(product: Map<String, Any>): Dishes{
+private  fun transformProductDoc(product: Map<String, Any>, id: String): Dishes{
     return Dishes(
         name = product["name"].toString(),
         category = product["category"].toString(),
@@ -57,7 +58,7 @@ private  fun transformProductDoc(product: Map<String, Any>): Dishes{
         sizes = product["sizes"] as Map<String, Number>,
         spiceLevel = product["spice_level"] as Number,
         image = product["image"].toString(),
-        id = product["id"].toString()
+        id = id
     )
 }
 

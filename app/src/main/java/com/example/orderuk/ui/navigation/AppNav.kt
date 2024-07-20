@@ -59,6 +59,7 @@ import com.example.orderuk.data.CartItem
 import com.example.orderuk.domain.CartEvents
 import com.example.orderuk.domain.CartViewModel
 import com.example.orderuk.ui.screens.HomeScreen
+import com.example.orderuk.ui.screens.OrderScreen
 import com.example.orderuk.ui.screens.RestaurantScreen
 import com.example.orderuk.ui.theme.DarkBlue
 import com.example.orderuk.ui.theme.OrderukTheme
@@ -72,6 +73,8 @@ sealed class Routes {
 
     @Serializable
     data object Restaurant : Routes()
+    @Serializable
+    data object Order: Routes()
 }
 
 @Composable
@@ -108,12 +111,22 @@ fun AppNav(
                 composable<Routes.Restaurant> {
                     RestaurantScreen(cartUiEvent = cartViewModel::onUIEvent)
                 }
+                composable<Routes.Order> {
+                    OrderScreen(navigateToHome = {
+                       val isPopped= navController.popBackStack<Routes.Home>(inclusive = true)
+                        if(!isPopped){
+                            navController.navigate(route=Routes.Home)
+                        }
+                    })
+                }
             }
         }
         if (showCart) {
             CartDetail(cartItems = cartState, closeCart = {
                 showCart = false
-            }, cartUiEvent = cartViewModel::onUIEvent)
+            }, cartUiEvent = cartViewModel::onUIEvent, navigateToOrder = {
+                navController.navigate(route = Routes.Order)
+            })
         }
 
     }
@@ -168,7 +181,8 @@ fun CartDetail(
     modifier: Modifier = Modifier,
     cartItems: List<CartItem>,
     closeCart: () -> Unit,
-    cartUiEvent: (CartEvents) ->  Unit
+    cartUiEvent: (CartEvents) ->  Unit,
+    navigateToOrder : () -> Unit
 ) {
 
     Box(modifier = modifier) {
@@ -313,7 +327,10 @@ fun CartDetail(
                 }
 
                 Button(
-                    onClick = { /*TODO*/ }, colors = ButtonDefaults.buttonColors(
+                    onClick = {
+                        navigateToOrder()
+                        closeCart()
+                    }, colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Green,
                         contentColor = Color.White
                     ), shape = RoundedCornerShape(10.dp)
@@ -342,7 +359,8 @@ fun AppNavPreview(modifier: Modifier = Modifier) {
 
             ),
             closeCart = {},
-            cartUiEvent = {}
+            cartUiEvent = {},
+            navigateToOrder = {}
         )
     }
 }
